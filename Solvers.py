@@ -49,13 +49,17 @@ class MVDM():
     def set_values(self, values):
         self.values = values
 
+    def get_values(self):
+        return self.values
+
     def Maximax(self):
         listP = []
-        tempV = self.rotate()
+        tempV = self.values
         details = []
+        print(tempV)
 
         for value in tempV:
-            temp = value
+            temp = value.copy()
             temp.append(max(value))
             details.append(temp)
             listP.append(max(value))
@@ -64,16 +68,16 @@ class MVDM():
 
         for i in range(len(listP)):
             if listP[i] == maxP:
-                self.report({"Type": inspect.stack()[
-                            0][3], "Option": self.options[i] + f" i={i+1}", "target_value": maxP, "values": details, })
+                self.report(
+                    {"Type": 'Maximax', "Option": self.options[i] + f" i={i+1}", "target_value": maxP, "values": details, })
 
     def Maximin(self):
         listP = []
-        tempV = self.rotate()
+        tempV = self.get_values()
         details = []
-
+        print(tempV)
         for value in tempV:
-            temp = value
+            temp = value.copy()
             temp.append(min(value))
             details.append(temp)
             listP.append(min(value))
@@ -82,34 +86,35 @@ class MVDM():
 
         for i in range(len(listP)):
             if listP[i] == maxP:
-                self.report({"Type": inspect.stack()[
-                            0][3], "Option": self.options[i] + f" i={i+1}", "target_value": maxP, "values": details, })
+                self.report(
+                    {"Type": 'Maximin', "Option": self.options[i] + f" i={i+1}", "target_value": maxP, "values": details})
 
     def Laplace(self):
         listP = []
-        tempV = self.rotate()
+        tempV = self.values
         details = []
 
         for value in tempV:
-            temp = value
-            temp.append(sum(value)*1/len(self.situations))
+            temp = value.copy()
+            temp.append(sum(value)/len(self.situations))
             details.append(temp)
-            listP.append(sum(value)*1/len(self.situations))
+            listP.append(sum(value)/len(self.situations))
+            print(listP)
 
         maxP = max(listP)
-
+        print(maxP)
         for i in range(len(listP)):
             if listP[i] == maxP:
-                self.report({"Type": inspect.stack()[
-                            0][3], "Option": self.options[i] + f" i={i+1}", "target_value": maxP, "values": details, })
+                self.report(
+                    {"Type": 'Laplace', "Option": self.options[i] + f" i={i+1}", "target_value": maxP, "values": details, })
 
     def Hurwicz(self, alpha):
         listP = []
-        tempV = self.rotate()
+        tempV = self.values
         details = []
 
         for value in tempV:
-            temp = value
+            temp = value.copy()
             temp.append(max(value)*alpha+min(value)*(1-alpha))
             details.append(temp)
             listP.append(max(value)*alpha+min(value)*(1-alpha))
@@ -123,8 +128,8 @@ class MVDM():
 
     def Minimax(self):
         listP = []
-        oriV = self.values
-        tempV = self.rotate()
+        oriV = self.rotate()
+        tempV = self.values
         max_i = [max(value) for value in oriV]
         details = []
 
@@ -146,9 +151,8 @@ class MVDM():
 
     def MaxEMV(self, proba):
         listP = []
-        tempV = self.rotate()
+        tempV = self.values
         details = []
-
         for row in tempV:
             temp = [proba[j]*row[j]
                     for j in range(len(row))]
@@ -167,8 +171,8 @@ class MVDM():
 
     def MinEOL(self, proba):
         listP = []
-        oriV = self.values
-        tempV = self.rotate()
+        tempV = self.values
+        oriV = self.rotate()
         max_i = [max(value) for value in oriV]
         details = []
 
